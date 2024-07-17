@@ -53,7 +53,7 @@ done
 image_name=${TAG:-"isce-framework/dolphin:latest"}
 
 # Build the Docker image
-cmd_base="docker build --network=host --tag $image_name --file docker/Dockerfile"
+cmd_base="docker build --network=host --ssh default --tag $image_name --file docker/Dockerfile"
 
 # append --build-arg if specified:
 if [ -z "${BASE+x}" ]; then

@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 # This is the image we are going add micromaba to:
 ARG BASE=ubuntu:22.04@sha256:7a57c69fe1e9d5b97c5fe649849e79f2cfc3bf11d10bbd5218b4eb61716aebe6
 
@@ -72,6 +74,11 @@ COPY --chown=$MAMBA_USER:$MAMBA_USER . .
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
 # For now, manually install tophu/snaphu from git/pip
 RUN python -m pip install --no-deps "snaphu>=0.4" git+https://github.com/isce-framework/tophu@66df96fc4645f6977421336ed96c553833216c07 git+https://github.com/isce-framework/spurt@main
+
+# The whirlwind repository is currently private so clone it and build from source
+# (requires SSH mounts -- see https://docs.docker.com/build/building/secrets/#ssh-mounts).
+ADD --chown=$MAMBA_USER:$MAMBA_USER --keep-git-dir=true git@github.com:isce-framework/whirlwind.git /tmp/whirlwind/
+RUN python -m pip install --no-deps /tmp/whirlwind/
 
 # --no-deps because they are installed with conda
 RUN python -m pip install --no-deps .
